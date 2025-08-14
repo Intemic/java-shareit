@@ -1,6 +1,6 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.mapper;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserCreate;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdate;
