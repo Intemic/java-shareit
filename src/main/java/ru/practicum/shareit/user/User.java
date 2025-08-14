@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(of = {"id"})
 public class User {
-    private long id;
+    private Long id;
     private String name;
     private String email;
 }
