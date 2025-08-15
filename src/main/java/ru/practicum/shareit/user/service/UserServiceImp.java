@@ -12,7 +12,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -20,7 +19,7 @@ import java.util.Optional;
 public class UserServiceImp implements UserService {
     private final UserStorage userStorage;
 
-    private User getOneUser(long id) {
+    public User getOneUser(long id) {
         Optional<User> userOptional = userStorage.get(id);
         if (userOptional.isEmpty())
             throw new NotFoundResource("Пользователь %d не найден".formatted(id));
