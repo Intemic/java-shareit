@@ -8,15 +8,15 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 public interface UserService {
-   User getOneUser(long id);
+    User getOneUser(long id);
 
-   UserDto getUser(long id);
+    UserDto getUser(long id);
 
-   List<UserDto> getUsers();
+    List<UserDto> getUsers();
 
-   UserDto create(UserCreate userCreate);
+    UserDto create(UserCreate userCreate);
 
-   UserDto update(UserUpdate userUpdate);
+    UserDto update(UserUpdate userUpdate);
 
-   void delete(long id);
+    void delete(long id);
 }

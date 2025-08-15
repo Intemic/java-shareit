@@ -20,13 +20,13 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable(name="itemId") @Positive Long id) {
+    public ItemDto getItem(@PathVariable(name = "itemId") @Positive Long id) {
         return itemService.getItem(id);
     }
 
     @GetMapping
     public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
-       return itemService.getItems(userId);
+        return itemService.getItems(userId);
     }
 
     @GetMapping("/search")
