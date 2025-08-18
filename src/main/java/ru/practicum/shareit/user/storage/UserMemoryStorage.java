@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public class UserMemoryStorage implements UserStorage {
     private static long id = 0L;
-    Map<Long, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
 
     @Override
     public Optional<User> getUserForName(String name) {
