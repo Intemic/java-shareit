@@ -20,7 +20,7 @@ public class User {
     private Long id;
     private String name;
     private String email;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     List<Item> items = new ArrayList<Item>();
 
     public void addItem(Item item) {
