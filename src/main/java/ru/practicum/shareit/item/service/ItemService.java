@@ -13,7 +13,7 @@ public interface ItemService {
 
     List<ItemDto> search(String text);
 
-    ItemDto create(ItemCreate item);
+    ItemDto create(ItemCreate item, long userId);
 
     ItemDto update(ItemUpdate item, long userId);
 }
