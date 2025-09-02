@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 public class BookingCreate {
-   // @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long booker;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private long booker;
     @NotNull
     private Long itemId;
     @NotNull
-    //@DateTimeFormat(style = "yyyy-MM-dd:mm-ss")
+    @DateTimeFormat(style = "yyyy-MM-dd:mm:ss")
     private LocalDateTime start;
     @NotNull
-    //@DateTimeFormat(style = "yyyy-MM-dd:mm-ss")
+    @DateTimeFormat(style = "yyyy-MM-dd:mm:ss")
     private LocalDateTime end;
 }

@@ -21,7 +21,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserService userService;
 
-    private Item getOneItem(Long id) {
+    public Item getOneItem(Long id) {
         Optional<Item> optionalItem = itemRepository.findById(id);
         if (optionalItem.isEmpty())
             throw new NotFoundResource("Не найдена вещь %d".formatted(id));

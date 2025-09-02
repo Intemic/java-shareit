@@ -23,3 +23,5 @@ CREATE TABLE IF NOT EXISTS bookings(
     FOREIGN KEY(booker_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE
 );
+
+

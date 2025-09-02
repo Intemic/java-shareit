@@ -21,7 +21,7 @@ public class User {
     private String name;
     private String email;
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    List<Item> items = new ArrayList<Item>();
+    List<Item> items = new ArrayList<>();
 
     public void addItem(Item item) {
         items.add(item);
