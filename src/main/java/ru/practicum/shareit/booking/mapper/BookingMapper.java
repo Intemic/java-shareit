@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.service.UserService;
 public class BookingMapper {
     public static BookingDto mapToDto(Booking booking) {
         return BookingDto.builder()
+                .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
                 .status(booking.getStatus())

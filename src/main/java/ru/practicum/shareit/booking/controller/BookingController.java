@@ -10,10 +10,15 @@ import ru.practicum.shareit.booking.service.BookingService;
 
 @Validated
 @RestController
-@RequestMapping(path = "/bookings")
+@RequestMapping("/bookings")
 @RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
+
+    @GetMapping("/{bookingId}")
+    public BookingDto getBooking(@PathVariable("bookingId") Long bookingId) {
+        return bookingService.getBooking(bookingId);
+    }
 
     @PostMapping
     public BookingDto create(@RequestBody @Valid BookingCreate booking,

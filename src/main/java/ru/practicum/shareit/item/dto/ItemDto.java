@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 @Builder
@@ -13,4 +14,5 @@ public class ItemDto {
     private String name;
     private String description;
     private boolean available;
+    private UserDto owner;
 }

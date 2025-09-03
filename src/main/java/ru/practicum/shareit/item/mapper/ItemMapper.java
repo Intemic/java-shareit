@@ -5,6 +5,7 @@ import ru.practicum.shareit.item.dto.ItemCreate;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdate;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.mapper.UserMapper;
 
 @UtilityClass
 public class ItemMapper {
@@ -14,6 +15,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.isAvailable())
+                .owner(UserMapper.mapToDto(item.getOwner()))
                 .build();
     }
 

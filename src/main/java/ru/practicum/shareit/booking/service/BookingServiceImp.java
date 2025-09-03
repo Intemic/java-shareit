@@ -32,6 +32,11 @@ public class BookingServiceImp implements BookingService {
         return optionalBooking.get();
     }
 
+    @Override
+    public BookingDto getBooking(long id) {
+        return BookingMapper.mapToDto(getOneBooking(id));
+    }
+
     private void checkData(Booking booking) {
         if (booking.getStart().isBefore(LocalDateTime.now()))
             throw new ErrorParameter("Дата начала не может быть раньше текущей");
