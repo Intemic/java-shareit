@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.BookingStatusFilter;
 import ru.practicum.shareit.booking.dto.BookingCreate;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -14,7 +15,10 @@ import ru.practicum.shareit.exception.NotFoundResource;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.service.UserService;
 
+
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,8 +37,36 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public BookingDto getBooking(long id) {
-        return BookingMapper.mapToDto(getOneBooking(id));
+    public BookingDto getBooking(long id, long userId) {
+        Booking booking = getOneBooking(id);
+        if ((booking.getBooker().getId() != userId) && (booking.getItem().getOwner().getId() != userId))
+            throw new ForbiddenResource("Отсутствуют полномочия на операцию");
+
+        return BookingMapper.mapToDto(booking);
+    }
+
+    private List<BookingDto> filterAndSortBooking(List<Booking> bookings, BookingStatusFilter statusFilter) {
+        return bookings.stream()
+                .filter(booking -> switch (statusFilter) {
+                    case ALL -> true;
+                    case CURRENT -> booking.getStatus().equals(BookingStatus.APPROVED);
+                    case PAST -> booking.getEnd().isBefore(LocalDateTime.now());
+                    case FUTURE -> booking.getStart().isAfter(LocalDateTime.now());
+                    case WAITING -> booking.getStatus().equals(BookingStatus.WAITING);
+                    case REJECTED -> booking.getStatus().equals(BookingStatus.REJECTED);
+                })
+                .map(BookingMapper::mapToDto)
+                .sorted(Comparator.comparing(BookingDto::getStart))
+                .toList();
+    }
+
+    public List<BookingDto> getBooking(long userId, BookingStatusFilter statusFilter) {
+        return filterAndSortBooking(bookingRepository.findAllByBookerId(userId), statusFilter);
+    }
+
+    public List<BookingDto> getBookingOwner(long userId, BookingStatusFilter statusFilter) {
+        List<Booking> bookings = bookingRepository.findAllByItemOwnerId(userId);
+        return filterAndSortBooking(bookingRepository.findAllByItemOwnerId(userId), statusFilter);
     }
 
     private void checkData(Booking booking) {

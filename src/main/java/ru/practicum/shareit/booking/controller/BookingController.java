@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.BookingStatusFilter;
 import ru.practicum.shareit.booking.dto.BookingCreate;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
+
+import java.util.List;
 
 @Validated
 @RestController
@@ -16,8 +19,35 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping("/{bookingId}")
-    public BookingDto getBooking(@PathVariable("bookingId") Long bookingId) {
-        return bookingService.getBooking(bookingId);
+    public BookingDto getBooking(@PathVariable("bookingId") Long bookingId,
+                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return bookingService.getBooking(bookingId, userId);
+    }
+
+    @GetMapping
+    public List<BookingDto> getBookings(@RequestParam(required = false, defaultValue = "ALL") String state,
+                                        @RequestHeader("X-Sharer-User-Id") Long userId) {
+        BookingStatusFilter statusFilter;
+
+        try {
+            statusFilter = BookingStatusFilter.valueOf(state);
+        } catch (IllegalArgumentException ex) {
+            statusFilter = BookingStatusFilter.ALL;
+        }
+        return bookingService.getBooking(userId, statusFilter);
+    }
+
+    @GetMapping("/owner")
+    public List<BookingDto> getBookingsForOwner(@RequestParam(required = false, defaultValue = "ALL") String state,
+                                                @RequestHeader("X-Sharer-User-Id") Long userId) {
+        BookingStatusFilter statusFilter;
+
+        try {
+            statusFilter = BookingStatusFilter.valueOf(state);
+        } catch (IllegalArgumentException ex) {
+            statusFilter = BookingStatusFilter.ALL;
+        }
+        return bookingService.getBookingOwner(userId, statusFilter);
     }
 
     @PostMapping
