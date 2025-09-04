@@ -11,6 +11,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.ErrorParameter;
 import ru.practicum.shareit.exception.ForbiddenResource;
+import ru.practicum.shareit.exception.NotAvailable;
 import ru.practicum.shareit.exception.NotFoundResource;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.service.UserService;
@@ -89,7 +90,8 @@ public class BookingServiceImp implements BookingService {
     public BookingDto create(BookingCreate booking) {
         // проверка
         userService.getOneUser(booking.getBooker());
-        itemService.getOneItem(booking.getItemId());
+        if(!itemService.getOneItem(booking.getItemId()).isAvailable())
+            throw new NotAvailable("Операция невозможна, вещь не доступна");
 
         Booking bookingCreate = BookingMapper.mapToBooking(booking,
                 userService,
