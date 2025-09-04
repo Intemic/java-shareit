@@ -38,6 +38,8 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public BookingDto getBooking(long id, long userId) {
+        // проверка
+        userService.getOneUser(userId);
         Booking booking = getOneBooking(id);
         if ((booking.getBooker().getId() != userId) && (booking.getItem().getOwner().getId() != userId))
             throw new ForbiddenResource("Отсутствуют полномочия на операцию");
@@ -61,11 +63,14 @@ public class BookingServiceImp implements BookingService {
     }
 
     public List<BookingDto> getBooking(long userId, BookingStatusFilter statusFilter) {
+        // проверка
+        userService.getOneUser(userId);
         return filterAndSortBooking(bookingRepository.findAllByBookerId(userId), statusFilter);
     }
 
     public List<BookingDto> getBookingOwner(long userId, BookingStatusFilter statusFilter) {
-        List<Booking> bookings = bookingRepository.findAllByItemOwnerId(userId);
+        // проверка
+        userService.getOneUser(userId);
         return filterAndSortBooking(bookingRepository.findAllByItemOwnerId(userId), statusFilter);
     }
 
@@ -82,6 +87,10 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public BookingDto create(BookingCreate booking) {
+        // проверка
+        userService.getOneUser(booking.getBooker());
+        itemService.getOneItem(booking.getItemId());
+
         Booking bookingCreate = BookingMapper.mapToBooking(booking,
                 userService,
                 itemService);
@@ -90,8 +99,11 @@ public class BookingServiceImp implements BookingService {
     }
 
     public BookingDto change_approved(long bookingId, long userId, String approvedStr) {
+        // проверка
+        //userService.getOneUser(userId);
+
         Booking booking = getOneBooking(bookingId);
-        if (!booking.getItem().getOwner().equals(userService.getOneUser(userId)))
+        if (booking.getItem().getOwner().getId() != userId)
             throw new ForbiddenResource("Недопустимая операция");
 
         if (approvedStr.equals("true"))

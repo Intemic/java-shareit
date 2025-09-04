@@ -5,9 +5,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemCreate;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdate;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -38,6 +36,15 @@ public class ItemController {
     public ItemDto create(@RequestBody @Valid ItemCreate item,
                           @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.create(item, userId);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@RequestBody @Valid CommentCreate comment,
+                                    @PathVariable Long itemId,
+                                    @RequestHeader("X-Sharer-User-Id") Long userId) {
+        comment.setItemId(itemId);
+        comment.setAuthorId(userId);
+        return itemService.createComment(comment);
     }
 
     @PatchMapping("/{itemId}")

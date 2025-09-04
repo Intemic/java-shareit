@@ -24,4 +24,15 @@ CREATE TABLE IF NOT EXISTS bookings(
     FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS comments(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    item_id BIGINT,
+    author_id BIGINT,
+    text VARCHAR,
+    created timestamp,
+    FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE,
+    FOREIGN KEY(author_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT unique_keys_reviews UNIQUE(item_id, author_id)
+)
+
 

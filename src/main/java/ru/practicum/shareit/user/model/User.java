@@ -20,17 +20,17 @@ public class User {
     private Long id;
     private String name;
     private String email;
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    List<Item> items = new ArrayList<>();
-
-    public void addItem(Item item) {
-        items.add(item);
-        item.setOwner(this);
-    }
-
-    public void deleteItem(Item item) {
-        item.setOwner(null);
-        items.remove(item);
-    }
+//    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+//    List<Item> items = new ArrayList<>();
+//
+//    public void addItem(Item item) {
+//        items.add(item);
+//        item.setOwner(this);
+//    }
+//
+//    public void deleteItem(Item item) {
+//        item.setOwner(null);
+//        items.remove(item);
+//    }
 }
 

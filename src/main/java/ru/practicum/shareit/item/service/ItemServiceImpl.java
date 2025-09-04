@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ForbiddenResource;
 import ru.practicum.shareit.exception.NotFoundResource;
-import ru.practicum.shareit.item.dto.ItemCreate;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdate;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
@@ -54,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
         Item itemCreate = itemRepository.save(ItemMapper.mapToItem(item));
         ItemDto itemDto = ItemMapper.mapToDto(itemCreate);
         // в статье написано что нужно обновлять две стороны двухсторонней связи, обновим
-        item.getOwner().addItem(itemCreate);
+        //item.getOwner().addItem(itemCreate);
         return ItemMapper.mapToDto(itemCreate);
     }
 
@@ -67,5 +66,14 @@ public class ItemServiceImpl implements ItemService {
         Item updateItem = ItemMapper.updateItem(item, oldItem);
         itemRepository.save(updateItem);
         return ItemMapper.mapToDto(updateItem);
+    }
+
+    @Override
+    public CommentDto createComment(CommentCreate comment) {
+        //проверки
+        getOneItem(comment.getItemId());
+        userService.getOneUser(comment.getAuthorId());
+        // проверяем что брал в аренду
+
     }
 }

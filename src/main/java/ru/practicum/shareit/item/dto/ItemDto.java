@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -15,4 +18,5 @@ public class ItemDto {
     private String description;
     private boolean available;
     private UserDto owner;
+    private List<CommentDto> comments = new ArrayList<>();
 }
