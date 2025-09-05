@@ -90,7 +90,7 @@ public class BookingServiceImp implements BookingService {
     public BookingDto create(BookingCreate booking) {
         // проверка
         userService.getOneUser(booking.getBooker());
-        if(!itemService.getOneItem(booking.getItemId()).isAvailable())
+        if (!itemService.getOneItem(booking.getItemId()).isAvailable())
             throw new NotAvailable("Операция невозможна, вещь не доступна");
 
         Booking bookingCreate = BookingMapper.mapToBooking(booking,
@@ -101,9 +101,6 @@ public class BookingServiceImp implements BookingService {
     }
 
     public BookingDto change_approved(long bookingId, long userId, String approvedStr) {
-        // проверка
-        //userService.getOneUser(userId);
-
         Booking booking = getOneBooking(bookingId);
         if (booking.getItem().getOwner().getId() != userId)
             throw new ForbiddenResource("Недопустимая операция");

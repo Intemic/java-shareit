@@ -18,17 +18,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Booking {
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private long id;
-   @ManyToOne(fetch = FetchType.LAZY)
-   private User booker;
-   @ManyToOne(fetch = FetchType.LAZY)
-   private Item item;
-   @Column(name = "booking_start")
-   private LocalDateTime start;
-   @Column(name = "booking_end")
-   private LocalDateTime end;
-   @Enumerated(EnumType.STRING)
-   private BookingStatus status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User booker;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Item item;
+    @Column(name = "booking_start")
+    private LocalDateTime start;
+    @Column(name = "booking_end")
+    private LocalDateTime end;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
 }

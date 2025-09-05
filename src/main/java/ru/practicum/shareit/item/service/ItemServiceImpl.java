@@ -64,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
 
         return itemMap.values().stream()
                 .map(item -> setCommentsDto(ItemMapper.mapToDto(item),
-                                commentMap.getOrDefault(item.getId(), Collections.emptyList())))
+                        commentMap.getOrDefault(item.getId(), Collections.emptyList())))
                 .toList();
     }
 
