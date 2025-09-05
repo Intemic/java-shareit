@@ -15,5 +15,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "where (lower(i.name) LIKE lower(%:text%) or " +
             "lower(i.description) LIKE lower(%:text%)) and " +
             "available = true")
-    List<Item> search(@Param("text") String search_text);
+    List<Item> search(@Param("text") String text);
 }
