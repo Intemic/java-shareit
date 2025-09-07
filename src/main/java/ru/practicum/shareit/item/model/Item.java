@@ -7,7 +7,8 @@ import ru.practicum.shareit.user.model.User;
 @Entity
 @Table(name = "items")
 @Builder
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})

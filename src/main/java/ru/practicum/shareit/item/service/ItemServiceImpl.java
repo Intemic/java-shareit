@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenResource;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
@@ -75,12 +77,14 @@ public class ItemServiceImpl implements ItemService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public ItemDto create(ItemCreate item, long userId) {
         item.setOwner(userService.getOneUser(userId));
         return ItemMapper.mapToDto(itemRepository.save(ItemMapper.mapToItem(item)));
     }
 
+    @Transactional
     @Override
     public ItemDto update(ItemUpdate item, long userId) {
         Item oldItem = getOneItem(item.getId());
@@ -92,6 +96,7 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.mapToDto(updateItem);
     }
 
+    @Transactional
     @Override
     public CommentDto createComment(CommentCreate comment) {
         //проверки

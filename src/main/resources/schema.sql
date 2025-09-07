@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS bookings(
     item_id BIGINT,
     booking_start timestamp,
     booking_end timestamp,
-    status VARCHAR,
+    status VARCHAR(20),
     FOREIGN KEY(booker_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE
 );
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS comments(
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     item_id BIGINT,
     author_id BIGINT,
-    text VARCHAR,
+    text VARCHAR(1024),
     created timestamp,
     FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE,
     FOREIGN KEY(author_id) REFERENCES users(id) ON DELETE CASCADE,

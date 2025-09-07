@@ -1,10 +1,12 @@
 package ru.practicum.shareit.item.mapper;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.item.dto.CommentCreate;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.user.model.User;
 
+@UtilityClass
 public class CommentMapper {
     public static CommentDto mapToDto(Comment comment) {
         return CommentDto.builder()

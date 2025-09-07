@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ConflictResource;
 import ru.practicum.shareit.exception.NotFoundResource;
 import ru.practicum.shareit.user.dto.UserCreate;
@@ -14,6 +15,7 @@ import ru.practicum.shareit.user.storage.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class UserServiceImp implements UserService {
@@ -53,6 +55,7 @@ public class UserServiceImp implements UserService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public UserDto create(UserCreate userCreate) {
         User user = UserMapper.mapToUser(userCreate);
@@ -60,6 +63,7 @@ public class UserServiceImp implements UserService {
         return UserMapper.mapToDto(userRepository.save(user));
     }
 
+    @Transactional
     @Override
     public UserDto update(UserUpdate userUpdate) {
         User oldUser = getOneUser(userUpdate.getId());
@@ -68,6 +72,7 @@ public class UserServiceImp implements UserService {
         return UserMapper.mapToDto(userRepository.save(updateUser));
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         getOneUser(id);

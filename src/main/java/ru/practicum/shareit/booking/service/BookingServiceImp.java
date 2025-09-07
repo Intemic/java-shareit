@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.BookingStatusFilter;
 import ru.practicum.shareit.booking.dto.BookingCreate;
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImp implements BookingService {
@@ -63,12 +65,14 @@ public class BookingServiceImp implements BookingService {
                 .toList();
     }
 
+    @Override
     public List<BookingDto> getBooking(long userId, BookingStatusFilter statusFilter) {
         // проверка
         userService.getOneUser(userId);
         return filterAndSortBooking(bookingRepository.findAllByBookerId(userId), statusFilter);
     }
 
+    @Override
     public List<BookingDto> getBookingOwner(long userId, BookingStatusFilter statusFilter) {
         // проверка
         userService.getOneUser(userId);
@@ -86,6 +90,7 @@ public class BookingServiceImp implements BookingService {
             throw new ErrorParameter("Дата окончания должна быть больше даты начала");
     }
 
+    @Transactional
     @Override
     public BookingDto create(BookingCreate booking) {
         // проверка
@@ -100,6 +105,8 @@ public class BookingServiceImp implements BookingService {
         return BookingMapper.mapToDto(bookingRepository.save(bookingCreate));
     }
 
+    @Transactional
+    @Override
     public BookingDto change_approved(long bookingId, long userId, String approvedStr) {
         Booking booking = getOneBooking(bookingId);
         if (booking.getItem().getOwner().getId() != userId)
