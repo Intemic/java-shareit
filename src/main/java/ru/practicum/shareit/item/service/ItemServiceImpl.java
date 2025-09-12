@@ -2,67 +2,111 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenResource;
+import ru.practicum.shareit.exception.NotApproved;
 import ru.practicum.shareit.exception.NotFoundResource;
-import ru.practicum.shareit.item.dto.ItemCreate;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdate;
+import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.storage.ItemStorage;
+import ru.practicum.shareit.item.storage.CommentRepository;
+import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    private final ItemStorage itemStorage;
+    private final ItemRepository itemRepository;
     private final UserService userService;
+    private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
-    private Item getOneItem(Long id) {
-        Optional<Item> optionalItem = itemStorage.get(id);
+    public Item getOneItem(Long id) {
+        Optional<Item> optionalItem = itemRepository.findById(id);
         if (optionalItem.isEmpty())
             throw new NotFoundResource("Не найдена вещь %d".formatted(id));
 
         return optionalItem.get();
     }
 
+    private ItemDto setCommentsDto(ItemDto item, List<Comment> comments) {
+        item.setComments(comments.stream()
+                .map(CommentMapper::mapToDto)
+                .toList());
+        return item;
+    }
+
     @Override
     public ItemDto getItem(Long id) {
-        return ItemMapper.mapToDto(getOneItem(id));
+        ItemDto itemDto = ItemMapper.mapToDto(getOneItem(id));
+        setCommentsDto(itemDto, commentRepository.findAllByItem(id));
+        return itemDto;
     }
 
     @Override
     public List<ItemDto> getItems(Long userId) {
-        return itemStorage.getAll(userId).stream()
-                .map(ItemMapper::mapToDto)
+        Map<Long, Item> itemMap = itemRepository.findByOwnerId(userId).stream()
+                .collect(Collectors.toMap(Item::getId, Function.identity()));
+        Map<Long, List<Comment>> commentMap = commentRepository.findAllByItemIn(itemMap.keySet()).stream()
+                .collect(Collectors.groupingBy(Comment::getItem));
+
+        return itemMap.values().stream()
+                .map(item -> setCommentsDto(ItemMapper.mapToDto(item),
+                        commentMap.getOrDefault(item.getId(), Collections.emptyList())))
                 .toList();
     }
 
     @Override
     public List<ItemDto> search(String text) {
-        return itemStorage.search(text).stream()
+        return itemRepository.search(text).stream()
                 .map(ItemMapper::mapToDto)
                 .toList();
     }
 
+    @Transactional
     @Override
-    public ItemDto create(ItemCreate item) {
-        userService.getOneUser(item.getOwner());
-
-        return ItemMapper.mapToDto(itemStorage.create(ItemMapper.mapToItem(item)));
+    public ItemDto create(ItemCreate item, long userId) {
+        item.setOwner(userService.getOneUser(userId));
+        return ItemMapper.mapToDto(itemRepository.save(ItemMapper.mapToItem(item)));
     }
 
+    @Transactional
     @Override
     public ItemDto update(ItemUpdate item, long userId) {
         Item oldItem = getOneItem(item.getId());
-        if (oldItem.getOwner() != userId)
-            throw new ForbiddenResource("Отсутсвую полномочия на операцию");
+        if (oldItem.getOwner().getId() != userId)
+            throw new ForbiddenResource("Отсутствуют полномочия на операцию");
 
         Item updateItem = ItemMapper.updateItem(item, oldItem);
-        itemStorage.update(updateItem);
+        itemRepository.save(updateItem);
         return ItemMapper.mapToDto(updateItem);
+    }
+
+    @Transactional
+    @Override
+    public CommentDto createComment(CommentCreate comment) {
+        //проверки
+        getOneItem(comment.getItemId());
+        User user = userService.getOneUser(comment.getAuthorId());
+        // проверяем что брал в аренду
+        if (bookingRepository.findAllByItemIdAndEndBeforeAndBookerIdAndStatus(comment.getItemId(),
+                LocalDateTime.now(), comment.getAuthorId(), BookingStatus.APPROVED).isEmpty())
+            throw new NotApproved("Недопустимая операция");
+
+        return CommentMapper.mapToDto(commentRepository.save(CommentMapper.mapToComment(comment, user)));
     }
 }

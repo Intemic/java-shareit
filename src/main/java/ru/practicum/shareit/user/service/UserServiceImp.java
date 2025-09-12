@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ConflictResource;
 import ru.practicum.shareit.exception.NotFoundResource;
 import ru.practicum.shareit.user.dto.UserCreate;
@@ -9,18 +10,19 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdate;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class UserServiceImp implements UserService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
 
     public User getOneUser(long id) {
-        Optional<User> userOptional = userStorage.get(id);
+        Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty())
             throw new NotFoundResource("Пользователь %d не найден".formatted(id));
 
@@ -29,13 +31,13 @@ public class UserServiceImp implements UserService {
 
     private void checkData(User user) {
         Long userId = null;
-        Optional<User> optionalUser = userStorage.getUserForName(user.getName());
+        Optional<User> optionalUser = userRepository.findByNameContainingIgnoreCase(user.getName());
         if (optionalUser.isPresent())
             if (user.getId() == null || !user.equals(optionalUser.get()))
                 throw new ConflictResource("Пользователь с name - %s уже присутствует".formatted(user.getName()));
 
 
-        optionalUser = userStorage.getUserForEmail(user.getEmail());
+        optionalUser = userRepository.findByEmailContainingIgnoreCase(user.getEmail());
         if (optionalUser.isPresent())
             if (user.getId() == null || !user.equals(optionalUser.get()))
                 throw new ConflictResource("Пользователь с email - %s уже присутствует".formatted(user.getEmail()));
@@ -48,29 +50,32 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<UserDto> getUsers() {
-        return userStorage.getAll().stream()
+        return userRepository.findAll().stream()
                 .map(UserMapper::mapToDto)
                 .toList();
     }
 
+    @Transactional
     @Override
     public UserDto create(UserCreate userCreate) {
         User user = UserMapper.mapToUser(userCreate);
         checkData(user);
-        return UserMapper.mapToDto(userStorage.create(user));
+        return UserMapper.mapToDto(userRepository.save(user));
     }
 
+    @Transactional
     @Override
     public UserDto update(UserUpdate userUpdate) {
         User oldUser = getOneUser(userUpdate.getId());
         User updateUser = UserMapper.updateUser(userUpdate, oldUser);
         checkData(updateUser);
-        return UserMapper.mapToDto(userStorage.update(updateUser));
+        return UserMapper.mapToDto(userRepository.save(updateUser));
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         getOneUser(id);
-        userStorage.delete(id);
+        userRepository.deleteById(id);
     }
 }

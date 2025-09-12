@@ -4,22 +4,23 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "items")
+@Table(name = "comments")
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-public class Item {
+@AllArgsConstructor
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "item_id")
+    private long item;
     @ManyToOne(fetch = FetchType.LAZY)
-    //@Column(name = "owner_id")
-    private User owner;
-    private String name;
-    private String description;
-    private boolean available;
+    private User author;
+    private String text;
+    private LocalDateTime created;
 }
