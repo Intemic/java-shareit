@@ -4,13 +4,23 @@ CREATE TABLE IF NOT EXISTS users(
     email VARCHAR(100) UNIQUE
 );
 
+CREATE TABLE IF NOT EXISTS requests(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    owner_id BIGINT,
+    created timestamp,
+    description VARCHAR(255),
+    FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS items(
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     owner_id BIGINT,
     name VARCHAR(100),
     description VARCHAR,
     available BOOLEAN,
-    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+    request_id BIGINT,
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS bookings(
@@ -34,5 +44,6 @@ CREATE TABLE IF NOT EXISTS comments(
     FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE,
     FOREIGN KEY(author_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT unique_keys_reviews UNIQUE(item_id, author_id)
-)
+);
+
 

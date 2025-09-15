@@ -17,9 +17,10 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    //@Column(name = "owner_id")
     private User owner;
     private String name;
     private String description;
     private boolean available;
+    @Column(name = "request_id")
+    private Long requestId;
 }

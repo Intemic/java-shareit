@@ -11,7 +11,6 @@ import ru.practicum.shareit.user.model.User;
 @Data
 public class ItemCreate {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    //private Long owner;
     private User owner;
     @NotBlank
     private String name;
@@ -19,5 +18,6 @@ public class ItemCreate {
     private String description;
     @NotNull
     private Boolean available;
+    private Long requestId;
 }
 
