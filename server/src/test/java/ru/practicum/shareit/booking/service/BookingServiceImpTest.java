@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.service;
 
-import com.sun.source.tree.LambdaExpressionTree;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

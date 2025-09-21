@@ -36,7 +36,7 @@ class UserServiceImpTest {
     private User user;
 
     @BeforeEach
-    public void Before() {
+    public void before() {
         user = User.builder()
                 .id(1L)
                 .name("Ivan")

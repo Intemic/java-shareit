@@ -74,8 +74,8 @@ class ItemRequestServiceImpTest {
         itemRequest.setItems(List.of(item));
         Optional<ItemRequest> optionalItemRequest = Optional.of(itemRequest);
         when(itemRequestRepository.findById(itemRequest.getId())).thenReturn(optionalItemRequest);
-        when(itemRequestRepository.findById(5L)).
-                thenThrow(new NotFoundResource("Запрос %d не найден".formatted(5L)));
+        when(itemRequestRepository.findById(5L))
+                .thenThrow(new NotFoundResource("Запрос %d не найден".formatted(5L)));
 
         ItemRequestDto itemRequestDto = itemRequestService.getRequest(itemRequest.getId());
         assertThat(itemRequestDto.getId(), equalTo(itemRequest.getId()));
