@@ -20,7 +20,7 @@ import ru.practicum.shareit.item.dto.ItemUpdate;
 @Validated
 public class ItemController {
     private final ItemClient itemClient;
-    private final static String USER_HEAD = "X-Sharer-User-Id";
+    private static final String USER_HEAD = "X-Sharer-User-Id";
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItem(@PathVariable(name = "itemId") @Positive Long itemId) {

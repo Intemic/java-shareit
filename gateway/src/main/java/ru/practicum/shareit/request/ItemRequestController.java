@@ -17,7 +17,7 @@ import ru.practicum.shareit.request.dto.ItemRequestCreate;
 @Validated
 public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
-    private final static String USER_HEAD = "X-Sharer-User-Id";
+    private static final String USER_HEAD = "X-Sharer-User-Id";
 
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getRequest(@PathVariable long requestId) {
