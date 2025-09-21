@@ -50,6 +50,6 @@ public class ItemRequestServiceImp implements ItemRequestService {
     @Override
     public ItemRequestDto createRequest(ItemRequestCreate itemRequestCreate) {
         return ItemRequestMapper.mapToDto(itemRequestRepository.save(ItemRequestMapper
-                        .mapToItemRequest(itemRequestCreate, userService)));
+                .mapToItemRequest(itemRequestCreate, userService)));
     }
 }

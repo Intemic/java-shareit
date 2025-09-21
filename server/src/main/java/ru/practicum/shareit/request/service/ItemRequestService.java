@@ -9,9 +9,9 @@ import java.util.List;
 public interface ItemRequestService {
     ItemRequest getRequestOne(long requestId);
 
-   ItemRequestDto getRequest(long requestId);
+    ItemRequestDto getRequest(long requestId);
 
-   List<ItemRequestDto> getYourRequests(long userId);
+    List<ItemRequestDto> getYourRequests(long userId);
 
     List<ItemRequestDto> getRequestsExcludingYour(long excludingUserId);
 

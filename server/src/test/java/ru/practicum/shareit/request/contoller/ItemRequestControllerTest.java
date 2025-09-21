@@ -49,9 +49,9 @@ class ItemRequestControllerTest {
         when(itemRequestService.getRequest(itemRequestDto.getId())).thenReturn(itemRequestDto);
 
         mvc.perform(get("/requests/" + itemRequestDto.getId())
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(itemRequestDto.getId()), Long.class))
                 .andExpect(jsonPath("$.description", equalTo(itemRequestDto.getDescription())))
@@ -63,12 +63,12 @@ class ItemRequestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-        Assertions.assertEquals( "", result.getResponse().getContentAsString());
+        Assertions.assertEquals("", result.getResponse().getContentAsString());
     }
 
     @Test
     public void testMethodGetYourRequests() throws Exception {
-       when(itemRequestService.getYourRequests(2L)).thenReturn(List.of(itemRequestDto));
+        when(itemRequestService.getYourRequests(2L)).thenReturn(List.of(itemRequestDto));
 
         mvc.perform(get("/requests")
                         .characterEncoding(StandardCharsets.UTF_8)

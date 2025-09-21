@@ -24,7 +24,7 @@ class UserDtoTest {
                 .email("ivan@yandex.ru")
                 .build();
 
-        JsonContent<UserDto> result =  json.write(userDto);
+        JsonContent<UserDto> result = json.write(userDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("Ivan");

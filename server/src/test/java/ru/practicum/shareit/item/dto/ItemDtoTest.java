@@ -42,7 +42,7 @@ class ItemDtoTest {
                 .comments(List.of(commentDto))
                 .build();
 
-        JsonContent<ItemDto> result =  json.write(itemDto);
+        JsonContent<ItemDto> result = json.write(itemDto);
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo(itemDto.getName());
         assertThat(result).extractingJsonPathStringValue("$.description")

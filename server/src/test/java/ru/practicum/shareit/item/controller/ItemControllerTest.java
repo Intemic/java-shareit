@@ -304,6 +304,6 @@ class ItemControllerTest {
                         .header("X-Sharer-User-Id", user.getId())
                         .content(mapper.writeValueAsString(itemUpdate)))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.error",is("Отсутствуют полномочия на операцию")));
+                .andExpect(jsonPath("$.error", is("Отсутствуют полномочия на операцию")));
     }
 }

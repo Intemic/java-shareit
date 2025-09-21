@@ -73,7 +73,7 @@ public class BookingServiceIntegretionTest {
                 .getSingleResult();
 
         assertThat(bookingCreated.getId(), notNullValue());
-        assertThat(bookingCreated.getStart(), equalTo( bookingCreate.getStart()));
-        assertThat(bookingCreated.getEnd(), equalTo( bookingCreate.getEnd()));
+        assertThat(bookingCreated.getStart(), equalTo(bookingCreate.getStart()));
+        assertThat(bookingCreated.getEnd(), equalTo(bookingCreate.getEnd()));
     }
 }

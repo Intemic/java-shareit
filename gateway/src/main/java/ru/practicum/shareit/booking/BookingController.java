@@ -60,8 +60,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> change_approved(@PathVariable Long bookingId,
-                                      @RequestParam String approved,
-                                      @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                  @RequestParam String approved,
+                                                  @RequestHeader("X-Sharer-User-Id") Long userId) {
         Set<String> avaibleApproved = Set.of("true", "false");
         if (!avaibleApproved.contains(approved.toLowerCase()))
             throw new IllegalArgumentException("Unknown approved: " + approved);
