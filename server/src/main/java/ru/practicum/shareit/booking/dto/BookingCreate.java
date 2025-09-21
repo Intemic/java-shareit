@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Valid
-@Builder
+@Builder(toBuilder = true)
 @Data
 public class BookingCreate {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

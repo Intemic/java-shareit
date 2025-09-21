@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "requests")
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,6 +25,6 @@ public class ItemRequest {
     private LocalDateTime created;
     private String description;
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="request_id")
-    private final List<Item> items = new ArrayList<>();
+    @JoinColumn(name = "request_id")
+    private List<Item> items = new ArrayList<>();
 }

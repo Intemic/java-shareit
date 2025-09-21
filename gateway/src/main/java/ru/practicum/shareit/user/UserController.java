@@ -41,7 +41,7 @@ public class UserController {
     public ResponseEntity<Object> update(@RequestBody @Valid UserUpdate user,
                           @PathVariable @Positive Long id) {
         log.info("Update user: %s".formatted(user));
-        return userClient.update(id ,user);
+        return userClient.update(id, user);
     }
 
     @DeleteMapping("/{id}")
