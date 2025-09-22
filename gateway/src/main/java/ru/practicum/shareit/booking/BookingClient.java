@@ -12,10 +12,10 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
-import ru.practicum.shareit.client.BaseClient;
+import ru.practicum.shareit.client.BaseClientCache;
 
 @Service
-public class BookingClient extends BaseClient {
+public class BookingClient extends BaseClientCache {
     private static final String API_PREFIX = "/bookings";
 
     @Autowired

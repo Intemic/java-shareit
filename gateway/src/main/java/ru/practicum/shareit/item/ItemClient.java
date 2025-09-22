@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareit.client.BaseClient;
+import ru.practicum.shareit.client.BaseClientCache;
 import ru.practicum.shareit.item.dto.CommentCreate;
 import ru.practicum.shareit.item.dto.ItemCreate;
 import ru.practicum.shareit.item.dto.ItemUpdate;
@@ -15,7 +15,7 @@ import ru.practicum.shareit.item.dto.ItemUpdate;
 import java.util.Map;
 
 @Service
-public class ItemClient extends BaseClient {
+public class ItemClient extends BaseClientCache {
     private static final String API_PREFIX = "/items";
 
     @Autowired
