@@ -7,7 +7,9 @@ import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
