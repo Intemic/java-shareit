@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.ErrorParameter;
 import ru.practicum.shareit.item.dto.CommentCreate;
 import ru.practicum.shareit.item.dto.ItemCreate;
 import ru.practicum.shareit.item.dto.ItemUpdate;
@@ -36,6 +37,8 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestParam String text) {
+        if (text.isBlank())
+            throw new ErrorParameter("Некорректное значение");
         log.info("Search item for text - %s".formatted(text));
         return itemClient.search(text);
     }

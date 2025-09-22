@@ -18,9 +18,9 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(Exception ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ErrorParameter.class})
+    public ErrorResponse handleErrorParameter(ErrorParameter ex) {
         log.error(ex.getMessage());
         return new ErrorResponse(ex.getMessage());
     }
