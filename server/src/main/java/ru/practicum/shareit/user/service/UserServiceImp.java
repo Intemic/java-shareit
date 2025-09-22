@@ -29,7 +29,7 @@ public class UserServiceImp implements UserService {
         return userOptional.get();
     }
 
-    private void checkData(User user) {
+    public void checkData(User user) {
         Long userId = null;
         Optional<User> optionalUser = userRepository.findByNameContainingIgnoreCase(user.getName());
         if (optionalUser.isPresent())

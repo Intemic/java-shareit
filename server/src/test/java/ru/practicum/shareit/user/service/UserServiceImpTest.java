@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.practicum.shareit.exception.ConflictResource;
 import ru.practicum.shareit.exception.NotFoundResource;
 import ru.practicum.shareit.user.dto.UserCreate;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -60,7 +61,24 @@ class UserServiceImpTest {
         assertThat(userDto.getName(), equalTo(user.getName()));
         assertThat(userDto.getEmail(), equalTo(user.getEmail()));
 
-        Mockito.verify(userRepository, Mockito.times(1)).save(UserMapper.mapToUser(userCreate));
+        when(userRepository.findByNameContainingIgnoreCase(userCreate.getName()))
+                .thenThrow(new ConflictResource(
+                        "Пользователь с name - %s уже присутствует".formatted(userCreate.getName())));
+        ConflictResource conflictResource = Assertions.assertThrows(
+                ConflictResource.class,
+                () ->  userServiceImp.create(userCreate));
+        Assertions.assertEquals("Пользователь с name - %s уже присутствует".formatted(userCreate.getName()),
+                conflictResource.getMessage());
+
+        userCreate.setName("Egor");
+        when(userRepository.findByEmailContainingIgnoreCase(userCreate.getEmail()))
+                .thenThrow(new ConflictResource(
+                        "Пользователь с email - %s уже присутствует".formatted(userCreate.getEmail())));
+        conflictResource = Assertions.assertThrows(
+                ConflictResource.class,
+                () ->  userServiceImp.create(userCreate));
+        Assertions.assertEquals("Пользователь с email - %s уже присутствует".formatted(userCreate.getEmail()),
+                conflictResource.getMessage());
     }
 
     @Test
@@ -153,5 +171,28 @@ class UserServiceImpTest {
         Assertions.assertEquals("Пользователь 5 не найден", exception.getMessage());
     }
 
+    @Test
+    public void testMethodCheckData() {
+        User userChecked = user.toBuilder()
+                .id(null)
+                .build();
 
+        // новый
+        when(userRepository.findByNameContainingIgnoreCase(userChecked.getName()))
+                .thenReturn(Optional.of(user));
+        ConflictResource conflictResource = Assertions.assertThrows(
+                ConflictResource.class,
+                () ->  userServiceImp.checkData(userChecked));
+        Assertions.assertEquals("Пользователь с name - %s уже присутствует".formatted(user.getName()),
+                conflictResource.getMessage());
+
+        userChecked.setName("Katya");
+        when(userRepository.findByEmailContainingIgnoreCase(userChecked.getEmail()))
+                .thenReturn(Optional.of(user));
+        conflictResource = Assertions.assertThrows(
+                ConflictResource.class,
+                () ->  userServiceImp.checkData(userChecked));
+        Assertions.assertEquals("Пользователь с email - %s уже присутствует".formatted(userChecked.getEmail()),
+                conflictResource.getMessage());
+    }
 }
